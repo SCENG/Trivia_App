@@ -8,6 +8,17 @@ from models import setup_db, Question, Category
 
 QUESTIONS_PER_PAGE = 10
 
+"""Pragination function"""
+def paginate_questions(request, selection):
+    page = request.args.get('page', 1, type=int)
+    start =  (page - 1) * QUESTIONS_PER_PAGE
+    end = start + QUESTIONS_PER_PAGE
+    questions = [question.format() for question in selection]
+    current_questions = questions[start:end]
+
+    return current_questions
+
+
 def create_app(test_config=None):
     # create and configure the app
     app = Flask(__name__)
@@ -30,7 +41,7 @@ def create_app(test_config=None):
 
 
     """
-    @TODO:
+    @TODO: DONE
     Create an endpoint to handle GET requests
     for all available categories.
     """
@@ -48,7 +59,7 @@ def create_app(test_config=None):
             abort(422)
 
     """
-    @TODO:
+    @TODO: DONE
     Create an endpoint to handle GET requests for questions,
     including pagination (every 10 questions).
     This endpoint should return a list of questions,
@@ -59,6 +70,28 @@ def create_app(test_config=None):
     ten questions per page and pagination at the bottom of the screen for three pages.
     Clicking on the page numbers should update the questions.
     """
+    @app.route('/questions', methods=['GET'])
+    def get_questions():
+        try:
+            questions = Question.query.order_by(Question.id).all()
+            total_Questions = len(questions)
+            current_Questions = paginate_questions(request, questions)
+
+            if (len(current_Questions) == 0):
+                abort(404)
+            
+            categories = Category.query.all()
+            categories_dict = {category.id: category.type for category in categories}
+
+            return jsonify({
+                'success': True,
+                'questions': [question.format() for question in questions],
+                'total_questions': total_Questions,
+                'categories': categories_dict
+            })
+        except Exception as e:
+            print(e)
+            abort(400)
 
    
     """
@@ -68,6 +101,23 @@ def create_app(test_config=None):
     TEST: When you click the trash icon next to a question, the question will be removed.
     This removal will persist in the database and when you refresh the page.
     """
+
+    @app.route('/questions/<int:question_id>', methods=['DELETE'])
+    def delete_question(question_id):
+        try:
+            question = Question.query.filter(Question.id == question_id).one_or_none()
+
+            if question is None:
+                abort(404)
+
+            question.delete()
+
+            return jsonify({
+                'success': True,
+                'deleted': question_id
+            })
+        except Exception:
+            abort(422)
 
     """
     @TODO:
