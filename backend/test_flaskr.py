@@ -109,6 +109,12 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'unprocessable')
     
+    def test_internal_server_error(self):
+        response = self.client().get('/categories/1/questions?page=100')
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 500)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'internal server error')
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
