@@ -40,21 +40,21 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(data['success'], True)
         self.assertTrue(data['categories'])
 
-    # def test_get_questions(self):
-    #     response = self.client().get('/questions')
-    #     data = json.loads(response.data)
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(data['success'], True)
-    #     self.assertTrue(data['total_questions'])
-    #     self.assertTrue(len(data['questions']))
-    #     self.assertTrue(data['categories'])
+    def test_get_questions(self):
+        response = self.client().get('/questions')
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['total_questions'])
+        self.assertTrue(len(data['questions']))
+        self.assertTrue(data['categories'])
 
-    # def test_delete_question(self):
-    #     response = self.client().delete('/questions/1')
-    #     data = json.loads(response.data)
-    #     self.assertEqual(response.status_code, 200)
-    #     self.assertEqual(data['success'], True)
-    #     self.assertEqual(data['deleted'], 1)
+    def test_delete_question(self):
+        response = self.client().delete('/questions/1')
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertEqual(data['deleted'], 1)
 
     def test_trivia(self):
         response = self.client().post('/quizzes', json={})
