@@ -33,7 +33,35 @@ class TriviaTestCase(unittest.TestCase):
     TODO
     Write at least one test for each test for successful operation and for expected errors.
     """
+    def test_get_categories(self):
+        response = self.client().get('/categories')
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 200)
+        self.assertEqual(data['success'], True)
+        self.assertTrue(data['categories'])
 
+    # def test_get_questions(self):
+    #     response = self.client().get('/questions')
+    #     data = json.loads(response.data)
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(data['success'], True)
+    #     self.assertTrue(data['total_questions'])
+    #     self.assertTrue(len(data['questions']))
+    #     self.assertTrue(data['categories'])
+
+    # def test_delete_question(self):
+    #     response = self.client().delete('/questions/1')
+    #     data = json.loads(response.data)
+    #     self.assertEqual(response.status_code, 200)
+    #     self.assertEqual(data['success'], True)
+    #     self.assertEqual(data['deleted'], 1)
+
+    def test_trivia(self):
+        response = self.client().post('/quizzes', json={})
+        data = json.loads(response.data)
+        self.assert_(response.status_code, 422)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'unprocessable')
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
