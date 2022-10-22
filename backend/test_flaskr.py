@@ -101,6 +101,14 @@ class TriviaTestCase(unittest.TestCase):
         self.assertEqual(response.status_code, 404)
         self.assertEqual(data['success'], False)
         self.assertEqual(data['message'], 'resource not found')
+    
+    def test_unprocessable(self):
+        response = self.client().post('/questions', json={'question': 'test', 'answer': 'test', 'difficulty': 1})
+        data = json.loads(response.data)
+        self.assertEqual(response.status_code, 422)
+        self.assertEqual(data['success'], False)
+        self.assertEqual(data['message'], 'unprocessable')
+    
 
 # Make the tests conveniently executable
 if __name__ == "__main__":
