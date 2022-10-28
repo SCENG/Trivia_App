@@ -33,7 +33,7 @@ class TriviaTestCase(unittest.TestCase):
     TODO: DONE
     Write at least one test for each test for successful operation and for expected errors.
     """
-    def testt_paginate_questions(self):
+    def test_paginate_questions(self):
         response = self.client().get('/questions?page=1')
         data = json.loads(response.data)
         self.assertEqual(response.status_code, 200)
